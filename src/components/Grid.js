@@ -1,11 +1,11 @@
 import React from 'react';
 import { Line } from './Line.js';
 
-export const Grid = (props)  => {
+export const Grid = ({ grid, click })  => {
   return (
     <div className="grid">
-        {props.grid.map( (line, i) =>
-          <Line key={`line${i}`} line={line} click={props.click} />
+        {grid.map((line, i) =>
+          <Line key={`line${i}`} line={line} click={click} />
         )}
     </div>
   )

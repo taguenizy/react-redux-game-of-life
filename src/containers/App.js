@@ -1,79 +1,54 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Grid } from '../components/Grid.js';
 import { connect } from 'react-redux';
 import { updateGrid, randomize, toggleCell } from '../actions/gridActions.js';
 
-class GameOfLife extends React.Component {
-  constructor() {
-    super();
-    this.play = this.play.bind(this);
-    this.stop = this.stop.bind(this);
-    this.reset = this.reset.bind(this);
-    this.randomize = this.randomize.bind(this);
-    this.handleClick = this.handleClick.bind(this);
+const GameOfLife = ({ play, randomize, toggleCell, grid, gridSize }) => {
+  const [timerId, setTimerId] = useState(0);
+  useEffect(() => {
+    randomize(gridSize)
+  }, [])
+  
+  const startPlay = () => {
+    clearInterval(timerId);
+    const newTimerId = setInterval(() => {
+      console.log({ grid });
+      play(grid, gridSize)
+    }, 2000)
+    setTimerId(newTimerId)
   }
 
-  play(){
-    clearInterval(this.timerId);
-    this.timerId = setInterval(function(){
-      // this.setState({
-      //   grid: updateGrid(this.state.grid, this.state.gridSize)
-      // })
-      this.props.play(this.props.grid, this.props.gridSize);
-    }.bind(this), 100)
-  }
-  randomize(){
-    clearInterval(this.timerId);
-    // this.setState({
-    //   grid: randomize(this.state.gridSize)
-    // })
-    this.props.randomize(this.props.gridSize);
-  }
-  stop(){
-    clearInterval(this.timerId);
-  }
-  reset(){
-    clearInterval(this.timerId);
-    // this.setState({
-    //   grid: randomize(this.state.gridSize, true)
-    // })
-    this.props.randomize(this.props.gridSize, true);
-  }
-  componentWillMount(){
-    this.props.randomize(this.props.gridSize);
-    // this.setState({
-    //   grid: randomize(this.state.gridSize)
-    // })
-  }
-  handleClick(cell){
-    // cell.active = !cell.active;
-    // // this.setState({
-    // //   grid:this.state.grid
-    // // })
-    // this.forceUpdate();
+  const nextStep = () => play(grid, gridSize)
 
-    this.props.toggleCell(cell, this.props.grid);
+  const randomizeGrid = () => {
+    clearInterval(timerId);
+    randomize(gridSize);
   }
-  render(){
-    return (
-      <div>
-        <h1>Game of Life</h1>
-        <button type="button" onClick={this.play}>Play</button>
-        <button type="button" onClick={this.stop}>Stop</button>
-        <button type="button" onClick={this.reset}>Reset</button>
-        <button type="button" onClick={this.randomize}>Randomize</button>
-        <Grid grid={this.props.grid} click={this.handleClick} />
-      </div>
-    )
+
+  const reset = () => {
+    clearInterval(timerId);
+    randomize(gridSize, true);
   }
+
+  const stopPlay = () => clearInterval(timerId)
+
+  return (
+    <div>
+      <h1>Game of Life x</h1>
+      <button type="button" onClick={nextStep}>Step</button>
+      <button type="button" onClick={startPlay}>Play</button>
+      <button type="button" onClick={stopPlay}>Stop</button>
+      <button type="button" onClick={reset}>Reset</button>
+      <button type="button" onClick={randomizeGrid}>Randomize</button>
+      <Grid grid={grid} click={cell => toggleCell(cell, grid)} />
+    </div>
+  )
 }
 
-const mapStateToProps = (state) => {
-  return {
-    grid: state.grid,
-    gridSize: state.gridSize
-  };
-};
+const mapStateToProps = state => ({
+  grid: state.grid,
+  gridSize: state.gridSize
+});
 
 const mapDispatchToProps = (dispatch) => {
   return {
