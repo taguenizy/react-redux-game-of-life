@@ -15,7 +15,7 @@ const gridReducer = (state, action) => {
       case 'TOGGLE_CELL':
           state = {
             ...state,
-            grid: state.grid.map(line => line.map(cell => cell.id === action.payload.cell.id ? {
+            grid: state.grid.map(line => line.map(cell => cell.id === action.payload.id ? {
               ...cell,
               active: !cell.active,
             } : cell))

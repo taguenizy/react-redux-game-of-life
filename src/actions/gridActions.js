@@ -5,7 +5,7 @@ export const randomize = (size, blank) => ({
   payload: { size, blank }
 })
 
-export const toggleCell = cell => ({
+export const toggleCell = id => ({
   type: 'TOGGLE_CELL',
-  payload: { cell }
+  payload: { id }
 })
