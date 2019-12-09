@@ -11,7 +11,7 @@ const GameOfLife = ({ play, randomize, gridSize, grid }) => {
   
   const startPlay = () => {
     clearTimeout(timerId);
-    const newTimerId = setInterval(play, 500)
+    const newTimerId = setInterval(play, 100)
     setTimerId(newTimerId)
   }
 

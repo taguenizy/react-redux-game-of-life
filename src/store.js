@@ -3,5 +3,5 @@ import gridReducer from './reducers/gridReducer';
 
 export default createStore(
   gridReducer,
-  { grid: [], gridSize: 10}
+  { grid: [], gridSize: 20}
 );
