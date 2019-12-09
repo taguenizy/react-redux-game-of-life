@@ -26,7 +26,6 @@ const GameOfLife = ({ play, randomize, gridSize, grid }) => {
   }
 
   const stopPlay = () => clearTimeout(timerId)
-  console.log({ grid });
   
   return grid && grid.length ? (
     <div>

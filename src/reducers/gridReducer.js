@@ -54,8 +54,7 @@ function updateGrid(grid, gridSize){
   })
   return newGrid;
 
-  function checkNextValue(lineIndex, cellIndex,){
-    console.log({ lineIndex, cellIndex, gridSize });
+  function checkNextValue(lineIndex, cellIndex){
     
     var count = 0;
 
@@ -69,9 +68,6 @@ function updateGrid(grid, gridSize){
       if(cell < 0) return gridSize - 1;
       return cell;
     });
-
-    console.log({ lines });
-    
 
     lines.forEach(line => {
       cells.forEach(cell => {
