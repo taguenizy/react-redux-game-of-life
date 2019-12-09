@@ -10,27 +10,24 @@ const GameOfLife = ({ play, randomize, toggleCell, grid, gridSize }) => {
   }, [])
   
   const startPlay = () => {
-    clearInterval(timerId);
-    const newTimerId = setInterval(() => {
-      console.log({ grid });
-      play(grid, gridSize)
-    }, 2000)
+    clearTimeout(timerId);
+    const newTimerId = setInterval(nextStep, 500)
     setTimerId(newTimerId)
   }
 
   const nextStep = () => play(grid, gridSize)
 
   const randomizeGrid = () => {
-    clearInterval(timerId);
+    clearTimeout(timerId);
     randomize(gridSize);
   }
 
   const reset = () => {
-    clearInterval(timerId);
+    clearTimeout(timerId);
     randomize(gridSize, true);
   }
 
-  const stopPlay = () => clearInterval(timerId)
+  const stopPlay = () => clearTimeout(timerId)
 
   return (
     <div>
@@ -40,7 +37,7 @@ const GameOfLife = ({ play, randomize, toggleCell, grid, gridSize }) => {
       <button type="button" onClick={stopPlay}>Stop</button>
       <button type="button" onClick={reset}>Reset</button>
       <button type="button" onClick={randomizeGrid}>Randomize</button>
-      <Grid grid={grid} click={cell => toggleCell(cell, grid)} />
+      <Grid grid={grid} click={toggleCell} />
     </div>
   )
 }
@@ -58,9 +55,7 @@ const mapDispatchToProps = (dispatch) => {
     randomize: (size, blank) => {
       dispatch(randomize(size, blank))
     },
-    toggleCell: (cell, grid) => {
-      dispatch(toggleCell(cell, grid))
-    }
+    toggleCell: cell => dispatch(toggleCell(cell))
   };
 };
 

@@ -3,7 +3,7 @@ const gridReducer = (state, action) => {
     case 'UPDATE_GRID':
       state = {
         ...state,
-        grid: updateGrid(action.payload.grid, action.payload.gridSize)
+        grid: updateGrid(state.grid, action.payload.gridSize)
       }
       break;
       case 'RANDOMIZE_GRID':
@@ -15,7 +15,7 @@ const gridReducer = (state, action) => {
       case 'TOGGLE_CELL':
           state = {
             ...state,
-            grid: toggleCell(action.payload.cell, action.payload.grid)
+            grid: toggleCell(action.payload.cell, state.grid)
           }
           break;
   }
@@ -24,19 +24,12 @@ const gridReducer = (state, action) => {
 
 export default gridReducer;
 
-function toggleCell(selectedCell, grid){
-  let newGrid = [];
-  grid.forEach( (line) => {
-    let newLine = [];
-    newGrid.push(newLine);
-    line.forEach( (cell) =>{
-      newLine.push({
-        id: cell.id,
-        active: cell.id === selectedCell.id ? !cell.active : cell.active
-      })
-    })
-  })
-  return newGrid;
+const toggleCell = ({ i, j }, grid) => {
+  console.log('Toggle?');
+  
+  const cell = grid[i][j]
+  cell.active = !cell.active
+  return [...grid]
 }
 
 function randomize(size, blank){
@@ -46,7 +39,7 @@ function randomize(size, blank){
     let cells = [];
     result.push(cells);
     for (let j = 0; j < size; j++){
-      cells.push({id: id++, active: blank ? false : !!Math.round(Math.random())});
+      cells.push({id: id++, i, j, active: blank ? false : !!Math.round(Math.random())});
     }
   }
   return result;

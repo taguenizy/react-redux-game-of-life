@@ -18,12 +18,7 @@ export function randomize(size, blank){
   }
 }
 
-export function toggleCell(cell, grid){
-  return {
-    type: 'TOGGLE_CELL',
-    payload: {
-      cell,
-      grid
-    }
-  }
-}
+export const toggleCell = cell => ({
+  type: 'TOGGLE_CELL',
+  payload: { cell }
+})
