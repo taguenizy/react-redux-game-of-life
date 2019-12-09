@@ -1,11 +1,11 @@
 import React from 'react';
-import { Cell } from './Cell.js';
+import Cell from './Cell.js';
 
-export const Line = (props) => {
+export const Line = ({ lineNumber, lineSize }) => {
   return (
     <div className="line">
-        {props.line.map((cell, i)=>
-          <Cell key={cell.id} cell={cell} click={props.click} />
+        {Array.from({ length: lineSize }).map((cell, cellNumber)=>
+          <Cell key={`line#${lineNumber}-cell#${cellNumber}`} cellNumber={cellNumber} lineNumber={lineNumber} />
         )}
     </div>
   )

@@ -3,7 +3,7 @@ const gridReducer = (state, action) => {
     case 'UPDATE_GRID':
       state = {
         ...state,
-        grid: updateGrid(state.grid, action.payload.gridSize)
+        grid: updateGrid(state.grid, state.grid.length)
       }
       break;
       case 'RANDOMIZE_GRID':
@@ -15,7 +15,10 @@ const gridReducer = (state, action) => {
       case 'TOGGLE_CELL':
           state = {
             ...state,
-            grid: toggleCell(action.payload.cell, state.grid)
+            grid: state.grid.map(line => line.map(cell => cell.id === action.payload.cell.id ? {
+              ...cell,
+              active: !cell.active,
+            } : cell))
           }
           break;
   }
@@ -23,14 +26,6 @@ const gridReducer = (state, action) => {
 }
 
 export default gridReducer;
-
-const toggleCell = ({ i, j }, grid) => {
-  console.log('Toggle?');
-  
-  const cell = grid[i][j]
-  cell.active = !cell.active
-  return [...grid]
-}
 
 function randomize(size, blank){
   var id = 1;
@@ -60,6 +55,8 @@ function updateGrid(grid, gridSize){
   return newGrid;
 
   function checkNextValue(lineIndex, cellIndex,){
+    console.log({ lineIndex, cellIndex, gridSize });
+    
     var count = 0;
 
     var lines = [lineIndex-1, lineIndex, lineIndex+1].map( line => {
@@ -73,8 +70,12 @@ function updateGrid(grid, gridSize){
       return cell;
     });
 
+    console.log({ lines });
+    
+
     lines.forEach(line => {
       cells.forEach(cell => {
+        
         if(grid[line][cell].active) count++;
       });
     });

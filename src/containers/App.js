@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Grid } from '../components/Grid.js';
 import { connect } from 'react-redux';
-import { updateGrid, randomize, toggleCell } from '../actions/gridActions.js';
+import { updateGrid, randomize } from '../actions/gridActions.js';
 
-const GameOfLife = ({ play, randomize, toggleCell, grid, gridSize }) => {
+const GameOfLife = ({ play, randomize, gridSize, grid }) => {
   const [timerId, setTimerId] = useState(0);
   useEffect(() => {
     randomize(gridSize)
@@ -11,11 +11,9 @@ const GameOfLife = ({ play, randomize, toggleCell, grid, gridSize }) => {
   
   const startPlay = () => {
     clearTimeout(timerId);
-    const newTimerId = setInterval(nextStep, 500)
+    const newTimerId = setInterval(play, 500)
     setTimerId(newTimerId)
   }
-
-  const nextStep = () => play(grid, gridSize)
 
   const randomizeGrid = () => {
     clearTimeout(timerId);
@@ -28,34 +26,27 @@ const GameOfLife = ({ play, randomize, toggleCell, grid, gridSize }) => {
   }
 
   const stopPlay = () => clearTimeout(timerId)
-
-  return (
+  console.log({ grid });
+  
+  return grid && grid.length ? (
     <div>
       <h1>Game of Life x</h1>
-      <button type="button" onClick={nextStep}>Step</button>
+      <button type="button" onClick={play}>Step</button>
       <button type="button" onClick={startPlay}>Play</button>
       <button type="button" onClick={stopPlay}>Stop</button>
       <button type="button" onClick={reset}>Reset</button>
       <button type="button" onClick={randomizeGrid}>Randomize</button>
-      <Grid grid={grid} click={toggleCell} />
+      <Grid gridSize={gridSize} />
     </div>
-  )
+  ) : null;
 }
 
-const mapStateToProps = state => ({
-  grid: state.grid,
-  gridSize: state.gridSize
-});
+const mapStateToProps = ({ gridSize, grid }) => ({ gridSize, grid });
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    play: (grid, gridSize) => {
-      dispatch(updateGrid(grid, gridSize))
-    },
-    randomize: (size, blank) => {
-      dispatch(randomize(size, blank))
-    },
-    toggleCell: cell => dispatch(toggleCell(cell))
+    play: () => dispatch(updateGrid()),
+    randomize: (size, blank) => dispatch(randomize(size, blank))
   };
 };
 
