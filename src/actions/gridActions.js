@@ -1,22 +1,9 @@
-export function updateGrid(grid, gridSize){
-  return {
-    type: 'UPDATE_GRID',
-    payload: {
-      grid,
-      gridSize
-    }
-  }
-}
+export const updateGrid = () => ({ type: 'UPDATE_GRID' })
 
-export function randomize(size, blank){
-  return {
-    type: 'RANDOMIZE_GRID',
-    payload: {
-      size,
-      blank
-    }
-  }
-}
+export const randomize = (size, blank) => ({
+  type: 'RANDOMIZE_GRID',
+  payload: { size, blank }
+})
 
 export const toggleCell = cell => ({
   type: 'TOGGLE_CELL',
