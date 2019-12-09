@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Grid } from '../components/Grid.js';
+import Grid from '../components/Grid.js';
 import { connect } from 'react-redux';
 import { updateGrid, randomize } from '../actions/gridActions.js';
 
