@@ -1,4 +1,5 @@
-const gridReducer = (state, action) => {
+const defaultState = { grid: [], gridSize: 20}
+const gridReducer = (state = defaultState, action) => {
   switch (action.type) {
     case 'UPDATE_GRID':
       state = {
