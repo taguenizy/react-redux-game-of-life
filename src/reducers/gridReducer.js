@@ -1,94 +1,83 @@
-const gridReducer = (state, action) => {
-  switch (action.type) {
-    case 'UPDATE_GRID':
-      state = {
-        ...state,
-        grid: updateGrid(action.payload.grid, action.payload.gridSize)
-      }
-      break;
-      case 'RANDOMIZE_GRID':
-        state = {
-          ...state,
-          grid: randomize(action.payload.size, action.payload.blank)
-        }
-        break;
-      case 'TOGGLE_CELL':
-          state = {
-            ...state,
-            grid: toggleCell(action.payload.cell, action.payload.grid)
-          }
-          break;
-  }
-  return state;
-}
-
-export default gridReducer;
-
-function toggleCell(selectedCell, grid){
-  let newGrid = [];
-  grid.forEach( (line) => {
-    let newLine = [];
-    newGrid.push(newLine);
-    line.forEach( (cell) =>{
-      newLine.push({
-        id: cell.id,
-        active: cell.id === selectedCell.id ? !cell.active : cell.active
-      })
-    })
-  })
-  return newGrid;
-}
-
-function randomize(size, blank){
-  var id = 1;
-  let result = [];
-  for (let i = 0; i < size; i++){
-    let cells = [];
+function randomize(size, blank) {
+  let id = 1;
+  const result = [];
+  for (let i = 0; i < size; i += 1) {
+    const cells = [];
     result.push(cells);
-    for (let j = 0; j < size; j++){
-      cells.push({id: id++, active: blank ? false : !!Math.round(Math.random())});
+    for (let j = 0; j < size; j += 1) {
+      cells.push({
+        id: id += 1, i, j, active: blank ? false : !!Math.round(Math.random()),
+      });
     }
   }
   return result;
 }
+function checkNextValue(lineIndex, cellIndex, grid, gridSize) {
+  let count = 0;
 
-function updateGrid(grid, gridSize){
-  let newGrid = [];
-  grid.forEach( (line, lineIndex) => {
-    let newLine = [];
+  const lines = [lineIndex - 1, lineIndex, lineIndex + 1].map((line) => {
+    if (line >= gridSize) return 0;
+    if (line < 0) return gridSize - 1;
+    return line;
+  });
+  const cells = [cellIndex - 1, cellIndex, cellIndex + 1].map((cell) => {
+    if (cell >= gridSize) return 0;
+    if (cell < 0) return gridSize - 1;
+    return cell;
+  });
+
+  lines.forEach((line) => {
+    cells.forEach((cell) => {
+      if (grid[line][cell].active) count += 1;
+    });
+  });
+
+  if (grid[lineIndex][cellIndex].active) count -= 1;
+
+  return (count === 3 || (count === 2 && grid[lineIndex][cellIndex].active));
+}
+function updateGrid(grid, gridSize) {
+  const newGrid = [];
+  grid.forEach((line, lineIndex) => {
+    const newLine = [];
     newGrid.push(newLine);
-    line.forEach( (cell, cellIndex) =>{
+    line.forEach((cell, cellIndex) => {
       newLine.push({
         id: grid[lineIndex][cellIndex].id,
-        active: checkNextValue(lineIndex, cellIndex)
-      })
-    })
-  })
-  return newGrid;
-
-  function checkNextValue(lineIndex, cellIndex,){
-    var count = 0;
-
-    var lines = [lineIndex-1, lineIndex, lineIndex+1].map( line => {
-      if(line >= gridSize) return 0;
-      if(line < 0) return gridSize - 1;
-      return line;
-    });
-    var cells = [cellIndex-1, cellIndex, cellIndex+1].map( cell => {
-      if(cell >= gridSize) return 0;
-      if(cell < 0) return gridSize - 1;
-      return cell;
-    });
-
-    lines.forEach(line => {
-      cells.forEach(cell => {
-        if(grid[line][cell].active) count++;
+        active: checkNextValue(lineIndex, cellIndex, grid, gridSize),
       });
     });
-
-    if(grid[lineIndex][cellIndex].active) count--;
-
-    return (count === 3 || (count === 2 && grid[lineIndex][cellIndex].active));
-  }
-
+  });
+  return newGrid;
 }
+
+const defaultState = { grid: [], gridSize: 20 };
+const gridReducer = (state = defaultState, action) => {
+  switch (action.type) {
+    case 'UPDATE_GRID': {
+      return {
+        ...state,
+        grid: updateGrid(state.grid, state.grid.length),
+      };
+    }
+    case 'RANDOMIZE_GRID': {
+      return {
+        ...state,
+        grid: randomize(action.payload.size, action.payload.blank),
+      };
+    }
+    case 'TOGGLE_CELL': {
+      return {
+        ...state,
+        grid: state.grid.map((line) => line.map((cell) => (cell.id === action.payload.id ? {
+          ...cell,
+          active: !cell.active,
+        } : cell))),
+      };
+    }
+    default: {
+      return state;
+    }
+  }
+};
+export default gridReducer;
