@@ -7,6 +7,6 @@ const Grid = ({ gridSize }) => (
       <Line key={`line${i}`} lineNumber={i} lineSize={gridSize} />
     ))}
   </div>
-)
+);
 
-export default React.memo(Grid)
+export default React.memo(Grid);
