@@ -1,31 +1,32 @@
 const defaultState = { grid: [], gridSize: 20}
 const gridReducer = (state = defaultState, action) => {
   switch (action.type) {
-    case 'UPDATE_GRID':
-      state = {
+    case 'UPDATE_GRID': {
+      return {
         ...state,
         grid: updateGrid(state.grid, state.grid.length)
       }
-      break;
-      case 'RANDOMIZE_GRID':
-        state = {
+    }
+      case 'RANDOMIZE_GRID': {
+        return {
           ...state,
           grid: randomize(action.payload.size, action.payload.blank)
         }
-        break;
-      case 'TOGGLE_CELL':
-          state = {
+      }
+      case 'TOGGLE_CELL': {
+          return {
             ...state,
             grid: state.grid.map(line => line.map(cell => cell.id === action.payload.id ? {
               ...cell,
               active: !cell.active,
             } : cell))
           }
-          break;
   }
-  return state;
+default: {
+  return state
 }
-
+}
+}
 export default gridReducer;
 
 function randomize(size, blank){
