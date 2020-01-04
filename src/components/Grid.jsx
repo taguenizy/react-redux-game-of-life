@@ -1,5 +1,6 @@
 import React from 'react';
-import Line from './Line.js';
+import PropTypes from 'prop-types';
+import Line from './Line';
 
 const Grid = ({ gridSize }) => (
   <div className="grid">
@@ -8,5 +9,9 @@ const Grid = ({ gridSize }) => (
     ))}
   </div>
 );
+
+Grid.propTypes = {
+  gridSize: PropTypes.number.isRequired,
+};
 
 export default React.memo(Grid);

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import Grid from '../components/Grid.js';
-import { updateGrid, randomize } from '../actions/gridActions.js';
+import PropTypes from 'prop-types';
+import Grid from '../components/Grid';
+import { updateGrid, randomize } from '../actions/gridActions';
 
 const GameOfLife = ({
   play, randomize, gridSize, grid,
@@ -48,5 +49,12 @@ const mapDispatchToProps = (dispatch) => ({
   play: () => dispatch(updateGrid()),
   randomize: (size, blank) => dispatch(randomize(size, blank)),
 });
+
+GameOfLife.propTypes = {
+  play: PropTypes.func.isRequired,
+  randomize: PropTypes.func.isRequired,
+  gridSize: PropTypes.number.isRequired,
+  grid: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameOfLife);
